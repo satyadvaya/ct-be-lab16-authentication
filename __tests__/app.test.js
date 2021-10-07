@@ -14,7 +14,7 @@ describe('lab16-authentication routes', () => {
       .send({ email: 'blowfish@mariner.dingy', password: 'bubbles' });
 
     expect(res.body).toEqual({
-      id: 1,
+      id: '1',
       email: 'blowfish@mariner.dingy',
     });
   });
