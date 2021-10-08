@@ -20,6 +20,20 @@ describe('lab16-authentication routes', () => {
     });
   });
 
+  it('returns a 400 status error if email already exists', async () => {
+    await UserService.create({
+      email: 'blowfish@mariner.dingy',
+      password: 'bubbles',
+    });
+
+    const res = await request(app).post('/api/auth/signup').send({
+      email: 'blowfish@mariner.dingy',
+      password: 'troubles',
+    });
+
+    expect(res.status).toEqual(400);
+  });
+
   it('logs in a user via POST', async () => {
     await UserService.create({
       email: 'blowfish@mariner.dingy',
