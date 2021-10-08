@@ -2,6 +2,7 @@ const pool = require('../lib/utils/pool.js');
 const setup = require('../data/setup.js');
 const request = require('supertest');
 const app = require('../lib/app.js');
+const UserService = require('../lib/services/UserService.js');
 
 describe('lab16-authentication routes', () => {
   beforeEach(() => {
@@ -11,6 +12,22 @@ describe('lab16-authentication routes', () => {
   it('signs up a user via POST', async () => {
     const res = await request(app)
       .post('/api/auth/signup')
+      .send({ email: 'blowfish@mariner.dingy', password: 'bubbles' });
+
+    expect(res.body).toEqual({
+      id: '1',
+      email: 'blowfish@mariner.dingy',
+    });
+  });
+
+  it('logs in a user via POST', async () => {
+    await UserService.create({
+      email: 'blowfish@mariner.dingy',
+      password: 'bubbles',
+    });
+
+    const res = await request(app)
+      .post('/api/auth/login')
       .send({ email: 'blowfish@mariner.dingy', password: 'bubbles' });
 
     expect(res.body).toEqual({
