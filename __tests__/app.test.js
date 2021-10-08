@@ -10,9 +10,10 @@ describe('lab16-authentication routes', () => {
   });
 
   it('signs up a user via POST', async () => {
-    const res = await request(app)
-      .post('/api/auth/signup')
-      .send({ email: 'blowfish@mariner.dingy', password: 'bubbles' });
+    const res = await request(app).post('/api/auth/signup').send({
+      email: 'blowfish@mariner.dingy',
+      password: 'bubbles',
+    });
 
     expect(res.body).toEqual({
       id: '1',
@@ -28,7 +29,7 @@ describe('lab16-authentication routes', () => {
 
     const res = await request(app).post('/api/auth/signup').send({
       email: 'blowfish@mariner.dingy',
-      password: 'troubles',
+      password: 'bubbles',
     });
 
     expect(res.status).toEqual(400);
@@ -48,6 +49,20 @@ describe('lab16-authentication routes', () => {
       id: '1',
       email: 'blowfish@mariner.dingy',
     });
+  });
+
+  it('returns a 401 status error if credentials are incorrect', async () => {
+    await UserService.create({
+      email: 'blowfish@mariner.dingy',
+      password: 'bubbles',
+    });
+
+    const res = await request(app).post('/api/auth/login').send({
+      email: 'blowfish@mariner.dingy',
+      password: 'troubles',
+    });
+
+    expect(res.status).toEqual(401);
   });
 
   afterAll(() => {
