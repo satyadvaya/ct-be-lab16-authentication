@@ -83,6 +83,8 @@ describe('lab16-authentication routes', () => {
     expect(res.body).toEqual({
       id: '1',
       email: agent.email,
+      exp: expect.any(Number),
+      iat: expect.any(Number),
     });
   });
 
