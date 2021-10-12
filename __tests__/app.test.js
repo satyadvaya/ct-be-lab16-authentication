@@ -65,6 +65,27 @@ describe('lab16-authentication routes', () => {
     expect(res.status).toEqual(401);
   });
 
+  it('verifies GET /me route responds with the currently logged in user', async () => {
+    const agent = request.agent(app);
+
+    await agent.post('/api/auth/signup').send({
+      email: 'blowfish@mariner.dingy',
+      password: 'bubbles',
+    });
+
+    await agent.post('/api/auth/login').send({
+      email: 'blowfish@mariner.dingy',
+      password: 'bubbles',
+    });
+
+    const res = await agent.get('/api/auth/me');
+
+    expect(res.body).toEqual({
+      id: '1',
+      email: agent.email,
+    });
+  });
+
   afterAll(() => {
     pool.end();
   });
