@@ -9,9 +9,9 @@ CREATE TABLE roles (
 CREATE TABLE users (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,
-  password_hash TEXT NOT NULL,
-  role_id BIGINT NOT NULL,
-  FOREIGN KEY (role_id) REFERENCES roles(id)
+    password_hash TEXT NOT NULL,
+    role_id BIGINT NOT NULL,
+    FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
 INSERT INTO roles (title)

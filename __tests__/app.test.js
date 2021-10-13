@@ -13,11 +13,13 @@ describe('lab16-authentication routes', () => {
     const res = await request(app).post('/api/auth/signup').send({
       email: 'blowfish@mariner.dingy',
       password: 'bubbles',
+      roleTitle: 'USER',
     });
 
     expect(res.body).toEqual({
       id: '1',
       email: 'blowfish@mariner.dingy',
+      role: '2',
     });
   });
 
@@ -25,11 +27,13 @@ describe('lab16-authentication routes', () => {
     await UserService.create({
       email: 'blowfish@mariner.dingy',
       password: 'bubbles',
+      roleTitle: 'USER',
     });
 
     const res = await request(app).post('/api/auth/signup').send({
       email: 'blowfish@mariner.dingy',
       password: 'bubbles',
+      role: '2',
     });
 
     expect(res.status).toEqual(400);
@@ -39,6 +43,7 @@ describe('lab16-authentication routes', () => {
     await UserService.create({
       email: 'blowfish@mariner.dingy',
       password: 'bubbles',
+      roleTitle: 'USER',
     });
 
     const res = await request(app)
@@ -48,6 +53,7 @@ describe('lab16-authentication routes', () => {
     expect(res.body).toEqual({
       id: '1',
       email: 'blowfish@mariner.dingy',
+      role: '2',
     });
   });
 
@@ -55,11 +61,13 @@ describe('lab16-authentication routes', () => {
     await UserService.create({
       email: 'blowfish@mariner.dingy',
       password: 'bubbles',
+      roleTitle: 'USER',
     });
 
     const res = await request(app).post('/api/auth/login').send({
       email: 'blowfish@mariner.dingy',
       password: 'troubles',
+      role: '2',
     });
 
     expect(res.status).toEqual(401);
@@ -82,7 +90,8 @@ describe('lab16-authentication routes', () => {
 
     expect(res.body).toEqual({
       id: '1',
-      email: agent.email,
+      email: 'blowfish@mariner.dingy',
+      role: '2',
       exp: expect.any(Number),
       iat: expect.any(Number),
     });
