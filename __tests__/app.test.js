@@ -131,16 +131,24 @@ describe('lab16-authentication routes', () => {
       password: 'bubbles',
     });
 
-    const banter = await agent.post('/api/blatherings').send({
+    const res = await agent.post('/api/blatherings').send({
       bantererId: '1',
       burble: 'bicker-bicker-bicker',
     });
 
-    expect(banter.body).toEqual({
+    expect(res.body).toEqual({
       id: '1',
       bantererId: babble.body.id,
       burble: 'bicker-bicker-bicker',
     });
+  });
+
+  it('returns a 401 status error if the request does not have a valid JWT', async () => {
+    const res = await request(app)
+      .post('/api/blatherings')
+      .send({ burble: 'banter' });
+
+    expect(res.status).toEqual(401);
   });
 
   afterAll(() => {
