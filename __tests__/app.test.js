@@ -151,14 +151,10 @@ describe('lab16-authentication routes', () => {
     expect(res.status).toEqual(401);
   });
 
-  afterAll(() => {
-    pool.end();
-  });
-
   it('allows ADMIN roles to DELETE blatherings', async () => {
     await UserService.create({
       email: 'admin@example.com',
-      password: 'adminpassword',
+      password: 'admin-password',
       roleTitle: 'ADMIN',
     });
 
@@ -171,7 +167,7 @@ describe('lab16-authentication routes', () => {
 
     await agent.post('/api/auth/login').send({
       email: 'admin@example.com',
-      password: 'adminpassword',
+      password: 'admin-password',
     });
 
     const res = await agent.delete('/api/blatherings/1');
@@ -182,5 +178,26 @@ describe('lab16-authentication routes', () => {
       bantererId: '1',
       burble: 'banter',
     });
+  });
+
+  it('returns a 401 status error if the request does not have a valid JWT on AUTH route', async () => {
+    await UserService.create({
+      email: 'admin@example.com',
+      password: 'admin-password',
+      roleTitle: 'USER',
+    });
+
+    await Blathering.createBlathering({
+      bantererId: '1',
+      burble: 'banter',
+    });
+
+    const res = await request(app).delete('/api/blatherings/1');
+
+    expect(res.status).toEqual(401);
+  });
+
+  afterAll(() => {
+    pool.end();
   });
 });
