@@ -123,6 +123,26 @@ describe('lab16-authentication routes', () => {
     ]);
   });
 
+  it('is only accessible to users who are signed in', async () => {
+    const agent = request.agent(app);
+
+    const babble = await agent.post('/api/auth/signup').send({
+      email: 'blowfish@mariner.dingy',
+      password: 'bubbles',
+    });
+
+    const banter = await agent.post('/api/blatherings').send({
+      bantererId: '1',
+      burble: 'bicker-bicker-bicker',
+    });
+
+    expect(banter.body).toEqual({
+      id: '1',
+      bantererId: babble.body.id,
+      burble: 'bicker-bicker-bicker',
+    });
+  });
+
   afterAll(() => {
     pool.end();
   });
