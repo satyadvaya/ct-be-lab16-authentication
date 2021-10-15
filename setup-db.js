@@ -10,5 +10,5 @@ setup(pool)
       roleTitle: 'ADMIN',
     })
   )
-  .catch((err) => console.error(err));
+  .catch((err) => console.error(err))
   .finally(() => process.exit());

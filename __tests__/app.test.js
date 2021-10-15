@@ -20,7 +20,7 @@ describe('lab16-authentication routes', () => {
     expect(res.body).toEqual({
       id: '1',
       email: 'blowfish@mariner.dingy',
-      role: '2',
+      role: 'USER',
     });
   });
 
@@ -54,7 +54,7 @@ describe('lab16-authentication routes', () => {
     expect(res.body).toEqual({
       id: '1',
       email: 'blowfish@mariner.dingy',
-      role: '2',
+      role: 'USER',
     });
   });
 
@@ -92,7 +92,7 @@ describe('lab16-authentication routes', () => {
     expect(res.body).toEqual({
       id: '1',
       email: 'blowfish@mariner.dingy',
-      role: '2',
+      role: 'USER',
       exp: expect.any(Number),
       iat: expect.any(Number),
     });
@@ -105,12 +105,12 @@ describe('lab16-authentication routes', () => {
       roleTitle: 'USER',
     });
 
-    const brouhaha1 = await Blathering.create({
+    const brouhaha1 = await Blathering.createBlathering({
       bantererId: '1',
       burble: 'balderdash',
     });
 
-    const brouhaha2 = await Blathering.create({
+    const brouhaha2 = await Blathering.createBlathering({
       bantererId: '1',
       burble: 'ballyhoo',
     });
@@ -153,5 +153,34 @@ describe('lab16-authentication routes', () => {
 
   afterAll(() => {
     pool.end();
+  });
+
+  it('allows ADMIN roles to DELETE blatherings', async () => {
+    await UserService.create({
+      email: 'admin@example.com',
+      password: 'adminpassword',
+      roleTitle: 'ADMIN',
+    });
+
+    await Blathering.createBlathering({
+      bantererId: '1',
+      burble: 'banter',
+    });
+
+    const agent = request.agent(app);
+
+    await agent.post('/api/auth/login').send({
+      email: 'admin@example.com',
+      password: 'adminpassword',
+    });
+
+    const res = await agent.delete('/api/blatherings/1');
+
+    // expect(res.status).toEqual(200);
+    expect(res.body).toEqual({
+      id: '1',
+      bantererId: '1',
+      burble: 'banter',
+    });
   });
 });
