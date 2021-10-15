@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS roles;
-
+DROP TABLE IF EXISTS blatherings;
 
 CREATE TABLE roles (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -13,6 +13,13 @@ CREATE TABLE users (
   password_hash TEXT NOT NULL,
   role_id BIGINT NOT NULL,
   FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+
+CREATE TABLE blatherings (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, 
+  burble TEXT NOT NULL,
+  banterer_id BIGINT NOT NULL,
+  FOREIGN KEY (banterer_id) REFERENCES users(id)
 );
 
 INSERT INTO roles (title)
