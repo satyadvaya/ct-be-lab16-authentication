@@ -3,6 +3,7 @@ const setup = require('../data/setup.js');
 const request = require('supertest');
 const app = require('../lib/app.js');
 const UserService = require('../lib/services/UserService.js');
+const Blathering = require('../lib/models/Blathering.js');
 
 describe('lab16-authentication routes', () => {
   beforeEach(() => {
@@ -95,6 +96,31 @@ describe('lab16-authentication routes', () => {
       exp: expect.any(Number),
       iat: expect.any(Number),
     });
+  });
+
+  it('does not require a JWT to GET all blatherings', async () => {
+    await UserService.create({
+      email: 'blowfish@mariner.dingy',
+      password: 'bubbles',
+      roleTitle: 'USER',
+    });
+
+    const brouhaha1 = await Blathering.create({
+      bantererId: '1',
+      burble: 'balderdash',
+    });
+
+    const brouhaha2 = await Blathering.create({
+      bantererId: '1',
+      burble: 'ballyhoo',
+    });
+
+    const res = await request(app).get('/api/blatherings');
+
+    expect(res.body).toEqual([
+      { ...brouhaha1, bantererId: '1' },
+      { ...brouhaha2, bantererId: '1' },
+    ]);
   });
 
   afterAll(() => {
