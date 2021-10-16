@@ -232,3 +232,5 @@ describe('lab16-authentication routes', () => {
     pool.end();
   });
 });
+
+// attempting to fix GitHub CI failure
