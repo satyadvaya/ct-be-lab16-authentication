@@ -172,7 +172,7 @@ describe('lab16-authentication routes', () => {
 
     const res = await agent.delete('/api/blatherings/1');
 
-    // expect(res.status).toEqual(200);
+    expect(res.status).toEqual(200);
     expect(res.body).toEqual({
       id: '1',
       bantererId: '1',
@@ -184,7 +184,7 @@ describe('lab16-authentication routes', () => {
     await UserService.create({
       email: 'admin@example.com',
       password: 'admin-password',
-      roleTitle: 'USER',
+      roleTitle: 'ADMIN',
     });
 
     await Blathering.createBlathering({
@@ -192,7 +192,14 @@ describe('lab16-authentication routes', () => {
       burble: 'banter',
     });
 
-    const res = await request(app).delete('/api/blatherings/1');
+    const agent = request.agent(app);
+
+    await agent.post('/api/auth/login').send({
+      email: 'admin@example.com',
+      password: 'non-admin-password',
+    });
+
+    const res = await agent.delete('/api/blatherings/1');
 
     expect(res.status).toEqual(401);
   });
