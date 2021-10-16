@@ -204,6 +204,30 @@ describe('lab16-authentication routes', () => {
     expect(res.status).toEqual(401);
   });
 
+  it('returns a 403 status error if the request does not have a valid JWT on AUTH route', async () => {
+    await UserService.create({
+      email: 'blowfish@mariner.dingy',
+      password: 'bubbles',
+      roleTitle: 'USER',
+    });
+
+    await Blathering.createBlathering({
+      bantererId: '1',
+      burble: 'banter',
+    });
+
+    const agent = request.agent(app);
+
+    await agent.post('/api/auth/login').send({
+      email: 'blowfish@mariner.dingy',
+      password: 'bubbles',
+    });
+
+    const res = await agent.delete('/api/blatherings/1');
+
+    expect(res.status).toEqual(403);
+  });
+
   afterAll(() => {
     pool.end();
   });
