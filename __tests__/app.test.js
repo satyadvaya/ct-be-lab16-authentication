@@ -234,3 +234,4 @@ describe('lab16-authentication routes', () => {
 });
 
 // attempting to fix GitHub CI failure
+// re-attempting to fix GitHub CI failure by adding all contents of .env file into actions secrets within repo on GitHub
